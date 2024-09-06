@@ -21,11 +21,25 @@ public class TaskController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("api/qrcode")
-    public ResponseEntity<BufferedImage> qrCode() {
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(QrCodeGenerator.createQrCode());
-        //return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    @GetMapping(path = "api/qrcode")
+    //    public ResponseEntity<BufferedImage> qrCode(@RequestParam int size) {
+    public ResponseEntity<?> qrCode(@RequestParam int size,
+                                    @RequestParam String type) {
+        QrCodeGenerator qrCodeSquare = new QrCodeGenerator();
+        if (!qrCodeSquare.setSize(size)) {
+            return ResponseEntity.badRequest().
+                    contentType(MediaType.APPLICATION_JSON).
+                    body(String.format("error : Image size must be between %d and %d pixels",
+                            qrCodeSquare.getMinSize(),
+                            qrCodeSquare.getMaxSize()));
+        } else {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("image/" + type))
+                    .body(qrCodeSquare.createQrCode());
+        }
     }
+
+
+
+
 }
