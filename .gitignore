@@ -1,6 +1,4 @@
  
 build 
-build.gradle 
 out/ 
-test\QRCodeApiTest.java 
 test/QRCodeApiTest.java
