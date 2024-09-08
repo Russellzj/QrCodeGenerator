@@ -1,9 +1,9 @@
 package qrcodeapi.Responses;
 
-public class ErrorMessage {
+public class Message {
     public final String error;
 
-    public ErrorMessage(String error) {
+    public Message(String error) {
         this.error = error;
     }
 
