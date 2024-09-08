@@ -24,7 +24,7 @@ public class QrCodeGenerator {
     private int size;
 
     private String type;
-    private char correctionLevel;
+    private String correctionLevel;
 
 
     public boolean setSize(int size) {
@@ -59,9 +59,9 @@ public class QrCodeGenerator {
         return minSize;
     }
 
-    public boolean setCorrectionLevel(char correctionLevel) {
-        List<Character> levels = List.of('L', 'M', 'Q', 'H');
-        correctionLevel = Character.toUpperCase(correctionLevel);
+    public boolean setCorrectionLevel(String correctionLevel) {
+        List<String> levels = List.of("L", "M", "Q", "H");
+        correctionLevel = correctionLevel.toUpperCase();
         if (levels.contains(correctionLevel)) {
             this.correctionLevel = correctionLevel;
             return true;
@@ -78,12 +78,18 @@ public class QrCodeGenerator {
         return image;
     }
 
+    public boolean isAllRequiredVariablesSet(){
+        if (size == 0 || type == null || correctionLevel == null)
+            return false;
+        return true;
+    }
+
     public BufferedImage createQrCode(String address) {
-        Map<Character, ErrorCorrectionLevel> levels = Map.of(
-                'L', ErrorCorrectionLevel.L,
-                'M', ErrorCorrectionLevel.M,
-                'Q', ErrorCorrectionLevel.Q,
-                'H', ErrorCorrectionLevel.H);
+        Map<String, ErrorCorrectionLevel> levels = Map.of(
+                "L", ErrorCorrectionLevel.L,
+                "M", ErrorCorrectionLevel.M,
+                "Q", ErrorCorrectionLevel.Q,
+                "H", ErrorCorrectionLevel.H);
         QRCodeWriter writer = new QRCodeWriter();
         BufferedImage defaultImage = createQrCodeBlank();
         Map<EncodeHintType, ErrorCorrectionLevel> errorCorrectionLevel =
