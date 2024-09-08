@@ -40,6 +40,10 @@ public class QrCodeGenerator {
         return false;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public int getMaxSize() {
         return maxSize;
     }
