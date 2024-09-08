@@ -5,6 +5,10 @@ buildscript {
         mavenCentral()
     }
 
+
+
+
+
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$hs.spring.bootVersion"
         classpath "io.spring.gradle:dependency-management-plugin:$hs.spring.dependencyManagementVersion"
@@ -14,6 +18,11 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+
+java {
+    sourceCompatibility = "17"
+    targetCompatibility = "20"
+}
 
 repositories {
     mavenCentral()
