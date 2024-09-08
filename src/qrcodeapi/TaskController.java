@@ -32,7 +32,8 @@ public class TaskController {
     //    public ResponseEntity<BufferedImage> qrCode(@RequestParam int size) {
     public ResponseEntity<?> qrCode(@RequestParam int size,
                                     @RequestParam String type,
-                                    @RequestParam String contents) {
+                                    @RequestParam String contents,
+                                    @RequestParam (defaultValue = "M") char correction) {
         QrCodeGenerator qrCodeSquare = new QrCodeGenerator();
        if (contents.trim().isBlank()) {
             return ResponseEntity.badRequest().
@@ -47,7 +48,8 @@ public class TaskController {
                     contentType(MediaType.APPLICATION_JSON).
                     body(messages.get(1));
         } else {
-            return ResponseEntity.ok()
+           qrCodeSquare.setCorrectionLevel(correction);
+           return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("image/" + qrCodeSquare.getType()))
                     .body(qrCodeSquare.createQrCode(contents));
         }
