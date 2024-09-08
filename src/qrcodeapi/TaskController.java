@@ -13,7 +13,8 @@ public class TaskController {
     public final List<Message> messages = List.of(
             new Message("Image size must be between 150 and 350 pixels"),
             new Message("Only png, jpeg and gif image types are supported"),
-            new Message("Contents cannot be null or blank"));
+            new Message("Contents cannot be null or blank"),
+            new Message("Permitted error correction levels are L, M, Q, H"));
 
 
     @GetMapping("/api/health2")
@@ -47,7 +48,7 @@ public class TaskController {
                     body(messages.get(1));
         } else {
             return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType("image/" + type))
+                    .contentType(MediaType.parseMediaType("image/" + qrCodeSquare.getType()))
                     .body(qrCodeSquare.createQrCode(contents));
         }
     }
