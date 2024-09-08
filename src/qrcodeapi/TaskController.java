@@ -1,17 +1,20 @@
 package qrcodeapi;
-import org.apache.tomcat.util.json.JSONParserTokenManager;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.config.Task;
 import org.springframework.web.bind.annotation.*;
+import qrcodeapi.Responses.Message;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 @RestController
 public class TaskController {
+    public final List<Message> messages = List.of(
+            new Message("Image size must be between 150 and 350 pixels"),
+            new Message("Only png, jpeg and gif image types are supported"));
+
+
     @GetMapping("/api/health2")
     public ResponseEntity<Task> returnSystem() {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -29,14 +32,14 @@ public class TaskController {
                                     @RequestParam String type) {
         QrCodeGenerator qrCodeSquare = new QrCodeGenerator();
         if (!qrCodeSquare.setSize(size)) {
-
-            String errorMessage = String.format("Image size must be between %d and %d pixels",
-                    qrCodeSquare.getMinSize(),
-                    qrCodeSquare.getMaxSize());
-            List<String> errorList = List.of(errorMessage);
             return ResponseEntity.badRequest().
                     contentType(MediaType.APPLICATION_JSON).
-                    body(errorList.get(0));
+                    body(messages.get(0));
+        } else if(!qrCodeSquare.setType(type)) {
+            return ResponseEntity.badRequest().
+                    contentType(MediaType.APPLICATION_JSON).
+                    body(messages.get(1));
+
         } else {
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("image/" + type))
