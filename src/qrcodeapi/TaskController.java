@@ -12,7 +12,8 @@ import java.util.List;
 public class TaskController {
     public final List<Message> messages = List.of(
             new Message("Image size must be between 150 and 350 pixels"),
-            new Message("Only png, jpeg and gif image types are supported"));
+            new Message("Only png, jpeg and gif image types are supported"),
+            new Message("Contents cannot be null or blank"));
 
 
     @GetMapping("/api/health2")
@@ -29,21 +30,25 @@ public class TaskController {
     @GetMapping(path = "api/qrcode")
     //    public ResponseEntity<BufferedImage> qrCode(@RequestParam int size) {
     public ResponseEntity<?> qrCode(@RequestParam int size,
-                                    @RequestParam String type) {
+                                    @RequestParam String type,
+                                    @RequestParam String contents) {
         QrCodeGenerator qrCodeSquare = new QrCodeGenerator();
-        if (!qrCodeSquare.setSize(size)) {
+       if (contents.trim().isBlank()) {
             return ResponseEntity.badRequest().
                     contentType(MediaType.APPLICATION_JSON).
-                    body(messages.get(0));
+                    body(messages.get(2));
+       } else if (!qrCodeSquare.setSize(size)) {
+           return ResponseEntity.badRequest().
+                   contentType(MediaType.APPLICATION_JSON).
+                   body(messages.get(0));
         } else if(!qrCodeSquare.setType(type)) {
             return ResponseEntity.badRequest().
                     contentType(MediaType.APPLICATION_JSON).
                     body(messages.get(1));
-
         } else {
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("image/" + type))
-                    .body(qrCodeSquare.createQrCode());
+                    .body(qrCodeSquare.createQrCode(contents));
         }
     }
 
