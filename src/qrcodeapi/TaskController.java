@@ -10,8 +10,9 @@ import java.util.List;
 
 @RestController
 public class TaskController {
-    public final List<Message> messages = List.of(
-            new Message("Image size must be between 150 and 350 pixels"),
+    public final List<Message> MESSAGES = List.of(
+            new Message(String.format("Image size must be between %d and %d pixels",
+                    QrCodeGenerator.getMIN_SIZE(), QrCodeGenerator.getMAX_SIZE())),
             new Message("Only png, jpeg and gif image types are supported"),
             new Message("Contents cannot be null or blank"),
             new Message("Permitted error correction levels are L, M, Q, H"));
@@ -38,19 +39,19 @@ public class TaskController {
        if (contents.trim().isBlank()) {
             return ResponseEntity.badRequest().
                     contentType(MediaType.APPLICATION_JSON).
-                    body(messages.get(2));
+                    body(MESSAGES.get(2));
        } else if (!qrCodeSquare.setSize(size)) {
            return ResponseEntity.badRequest().
                    contentType(MediaType.APPLICATION_JSON).
-                   body(messages.get(0));
+                   body(MESSAGES.get(0));
        } else if (!qrCodeSquare.setCorrectionLevel(correction)) {
            return ResponseEntity.badRequest().
                    contentType(MediaType.APPLICATION_JSON).
-                   body(messages.get(3));
+                   body(MESSAGES.get(3));
         } else if(!qrCodeSquare.setType(type)) {
            return ResponseEntity.badRequest().
                    contentType(MediaType.APPLICATION_JSON).
-                   body(messages.get(1));
+                   body(MESSAGES.get(1));
        } else {
            return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("image/" + qrCodeSquare.getType()))
