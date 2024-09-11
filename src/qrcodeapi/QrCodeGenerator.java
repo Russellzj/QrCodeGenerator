@@ -3,6 +3,7 @@ package qrcodeapi;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +20,9 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 
 public class QrCodeGenerator {
-    private final int maxSize = 350;
-    private final int minSize = 150;
+    private static final int MAX_SIZE = 350;
+    private static final int MIN_SIZE = 150;
+    private final List<String> AVAILABLE_FILE_TYPES = List.of("png", "jpeg", "gif");
     private int size;
 
     private String type;
@@ -28,10 +30,10 @@ public class QrCodeGenerator {
 
 
     public boolean setSize(int size) {
-        if (size > maxSize) {
+        if (size > MAX_SIZE) {
             return false;
         }
-        if (size < minSize) {
+        if (size < MIN_SIZE) {
             return false;
         }
         this.size = size;
@@ -39,8 +41,7 @@ public class QrCodeGenerator {
     }
 
     public boolean setType(String type) {
-        List<String> acceptableTypes = List.of("png", "jpeg", "gif");
-        if(acceptableTypes.contains(type)) {
+        if(AVAILABLE_FILE_TYPES.contains(type)) {
             this.type = type;
             return true;
         }
@@ -51,12 +52,10 @@ public class QrCodeGenerator {
         return type;
     }
 
-    public int getMaxSize() {
-        return maxSize;
-    }
+    public static int getMAX_SIZE() { return MAX_SIZE; }
 
-    public int getMinSize() {
-        return minSize;
+    public static int getMIN_SIZE() {
+        return MIN_SIZE;
     }
 
     public boolean setCorrectionLevel(String correctionLevel) {
